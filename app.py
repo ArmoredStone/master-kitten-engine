@@ -3,9 +3,7 @@ from flask_smorest import Api
 
 from db import db
 
-import models
-
-from resources import MainBlueprint, OrderBlueprint
+from resources import blp as MainBlueprint
 
 def create_app():
     app = Flask(__name__)
@@ -27,6 +25,5 @@ def create_app():
         db.create_all()
 
     api.register_blueprint(MainBlueprint)
-    api.register_blueprint(OrderBlueprint)
 
     return app
