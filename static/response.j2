@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>master-kitten-engine</title>
+</head>
+<body>
+
+  <a href="/"> <img src="master-kitten-engine.png" alt="logo"> </a> 
+
+    <h1>Order submission result</h1>
+
+  {% if success %}
+    <p>Дякую за ваше замовлення, {{ email }} !</p>
+    <p>Ви замовили {{ quantity }} одиниць товару.</p>
+    <p>Наш агент з продажу зв'яжеться з вами найближчим часом за вказаними контактними даними.</p>
+  {% else %}
+    <p>Виникла помилка при обробці вашого запиту. Будь ласка, спробуйте ще раз.</p>
+  {% endif %}
+
+</body>
+</html>
