@@ -6,4 +6,4 @@ from db import db
 from models import OrderModel
 from schemas import OrderSchema
 
-pass
+blp = Blueprint(OrderModel.__tablename__, "order")

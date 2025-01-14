@@ -5,7 +5,7 @@ from db import db
 
 import models
 
-#from resources.order import blp as OrderBlueprint
+from resources import MainBlueprint, OrderBlueprint
 
 def create_app():
     app = Flask(__name__)
@@ -26,6 +26,7 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-#    api.register_blueprint(OrderBlueprint)
+    api.register_blueprint(MainBlueprint)
+    api.register_blueprint(OrderBlueprint)
 
     return app
