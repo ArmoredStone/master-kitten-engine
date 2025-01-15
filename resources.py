@@ -1,13 +1,11 @@
-from flask import Blueprint, request, jsonify, render_template, abort, send_from_directory
 from schemas import OrderSchema
-
-from flask.views import MethodView
-from sqlalchemy.exc import SQLAlchemyError
-
 from models import OrderModel
 from db import db
 
-order_schema = OrderSchema()
+from flask import Blueprint, request, jsonify, render_template, abort, send_from_directory
+from marshmallow import ValidationError
+from sqlalchemy.exc import SQLAlchemyError
+
 blp = Blueprint("main", __name__)
 
 @blp.route("/")
@@ -20,16 +18,17 @@ def logo():
 
 @blp.route("/send_order", methods=['POST'])
 def create_order():
-    data = request.get_json()
-    
-    errors = order_schema.validate(data)
-    if errors:
-        return jsonify(errors), 400
-    
-    validated_data = order_schema.load(data)
-    
-    email = validated_data.get('email')
-    quantity = validated_data.get('quantity')
+    try:
+        # Get data from the form
+        email = request.form["email"]
+        quantity = int(request.form["quantity"])
+        # Validate the data using the Marshmallow schema
+        OrderSchema().load({"email": email, "quantity": quantity})
+    except ValidationError as err:
+        print(err)
+        abort(400)
+    except (KeyError, ValueError):
+        abort(400)
     
     new_order = OrderModel(email=email, quantity=quantity)
     
@@ -40,7 +39,4 @@ def create_order():
         db.session.rollback()
         abort(500, message=str(e))
     
-    result = order_schema.dump(new_order)
-    print(result)
-    
-    return jsonify({'message': 'Order created successfully!', 'order': result}), 201
+    return render_template("response.j2", success=True, email=new_order.email, quantity=new_order.quantity)
